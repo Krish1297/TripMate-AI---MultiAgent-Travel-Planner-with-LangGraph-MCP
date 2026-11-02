@@ -11,6 +11,10 @@ import uvicorn
 
 from backend import run_travel_agent
 
+# This is to allow nested event loops for async calls in FastAPI
+import nest_asyncio
+nest_asyncio.apply()
+
 BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI(title="AI Travel Planning System",

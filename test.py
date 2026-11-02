@@ -1,8 +1,9 @@
-from tools.tavily_tool import tavily_search
-from tools.flight_tool import search_flights
+import asyncio
+# from mcp_client_test import get_all_tools,get_tavily_search_tool,tavily_mcp_search
+from mcp_client import get_all_tools
 
-# res = tavily_search("Best hotels in Chennai")
-# print(res)
 
-res = search_flights("Plan a 7 day Kerala trip from Chennai") 
-print(res)
+if __name__ == "__main__":
+    query = "Find the best travel destinations in Paris for a 3-day trip in September."
+    # asyncio.run(tavily_mcp_search(query))
+    asyncio.run(get_all_tools())
