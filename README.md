@@ -1,6 +1,6 @@
-# ✈️ TripMate AI — A Multi-Agent Travel Planner with LangGraph
+# ✈️ TripMate AI — A Multi-Agent Travel Planner with LangGraph, MCP 
 
-AI travel planner that turns a natural-language trip request into a practical travel plan with flight, hotel and itinerary suggestions. The project uses a multi-agent workflow built with LangGraph, LangChain, and FastAPI.
+AI travel planner that turns a natural-language trip request into a practical travel plan with flight, hotel and itinerary suggestions. The project uses a multi-agent workflow built with LangGraph, LangChain, MCP and FastAPI.
 
 ## Why this project?
 
@@ -8,32 +8,34 @@ We usally plan a trip by looking different websites, tools, and spreadsheets. Th
 
 - flight-search agent,
 - hotel-research agent,
+- weather agent
 - itinerary-planning agent, and
 - final response agent,
 
 All agents are coordinated through LangGraph.
 
 ## Features
-
-- Flight research using AviationStack
-- Hotel suggestions using Tavily search
+- Flight research using AviationStack through a local MCP server
+- Hotel research using Tavily through a remote MCP server
+- Current weather and forecast information using a custom local MCP server
 - Multi-agent orchestration with LangGraph
-- Structured travel itinerary generation
+- Structured, weather-aware travel itinerary generation
 - FastAPI backend with a simple web interface
 - Conversation state persistence using PostgreSQL
 - LLM-powered responses with Groq
 
 ## Tech Stack
-
 - Python 3.10+
 - FastAPI
 - Jinja2 + HTML/CSS/JavaScript frontend
 - LangGraph
 - LangChain
+- Model Context Protocol (MCP)
 - Groq LLMs
 - PostgreSQL
 - Tavily API
 - AviationStack API
+- OpenWeather API
 
 ## Project Structure
 
@@ -42,6 +44,8 @@ All agents are coordinated through LangGraph.
 ├── app.py                # FastAPI app entry point
 ├── backend.py            # LangGraph travel workflow
 ├── requirements.txt      # Python dependencies
+├── mcp_client.py                  # MCP client configuration and tool integration
+├── custom_weather_mcp_server.py   # Custom local Weather MCP server
 ├── static/               # Static frontend assets
 ├── templates/            # HTML templates
 └── tools/                # Flight and web search integrations
@@ -57,6 +61,7 @@ Before running the project locally, make sure you have:
   - Groq
   - Tavily
   - AviationStack
+  - OpenWeather
 
 ## Environment Variables
 
@@ -67,6 +72,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/travel_db
 GROQ_API_KEY=your_groq_api_key
 AVIATIONSTACK_API_KEY=your_aviationstack_api_key
 TAVILY_API_KEY=your_tavily_api_key
+OPENWEATHER_API_KEY=your_openweather_api_key
 DEFAULT_ORIGIN_IATA=<Origin International Airport 3 letter abbreviation>
 ```
 
@@ -106,9 +112,9 @@ curl -X POST http://127.0.0.1:8000/api/travel \
 ```
 
 ## How the Workflow Works
-
-1. User submits a travel request by Natural Language.
-2. Flight agent gathers flight-related information.
-3. Hotel agent searches for accommodation suggestions.
-4. Itinerary agent creates a practical travel plan.
-5. Final agent formats the result into a polished response.
+1. User submits a travel request in natural language.
+2. Flight agent retrieves flight-related information using AviationStack MCP.
+3. Hotel agent researches accommodation using Tavily remote MCP.
+4. Weather agent retrieves current weather and forecast using custom local MCP.
+5. Itinerary agent generates a practical, weather-aware travel itinerary.
+6. Final agent combines the results into a structured travel response.
